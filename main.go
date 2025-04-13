@@ -10,6 +10,7 @@ import (
 	"weekly-8/internals/task5"
 	"weekly-8/internals/task6"
 	"weekly-8/internals/task7"
+	"weekly-8/internals/task8"
 )
 
 func main() {
@@ -58,6 +59,23 @@ func main() {
 	fmt.Println(resultsGenap)
 	fmt.Println(resultGanjil)
 
+	// task 8
+	channel := make(chan map[string]string)
+    var wgx sync.WaitGroup
+	var mtx sync.Mutex
+    wgx.Add(2)
+    go func ()  {
+        wgx.Wait()
+        close(channel)
+    }()
+
+    go task8.PrintProduct("Sabun", "20000", channel, &wgx)
+    go task8.PrintProduct("Shampo", "10000", channel, &wgx)
+    for data := range channel {
+        mtx.Lock()
+        fmt.Println(data)
+        mtx.Unlock()
+    }
 }
 
 type hitung2d interface {
